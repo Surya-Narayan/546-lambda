@@ -52,10 +52,14 @@ COPY --from=build-image ${FUNCTION_DIR} ${FUNCTION_DIR}
 ADD https://github.com/aws/aws-lambda-runtime-interface-emulator/releases/latest/download/aws-lambda-rie /usr/bin/aws-lambda-rie
 RUN chmod 755 /usr/bin/aws-lambda-rie
 
+RUN mkdir ${FUNCTION_DIR}/output
+
 # Install ffmpeg
 RUN apt-get install -y ffmpeg
 
 # Copy handler function
+COPY encoding ${FUNCTION_DIR}
+
 COPY requirements.txt ${FUNCTION_DIR}
 RUN python${RUNTIME_VERSION} -m pip install -r requirements.txt --target ${FUNCTION_DIR}
 COPY entry.sh /
